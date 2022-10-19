@@ -112,17 +112,19 @@ cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])
 checkNull :: Monomial -> Bool
 checkNull m = fst m /= 0
 
-exptostring :: (Char, Double) -> String
-exptostring exp
+expToString :: (Char, Double) -> String
+expToString exp
     |snd exp == 1 = [fst exp]
     |otherwise = intercalate "^" [[fst exp], show (round(snd exp))]
 
-monotostring :: Monomial -> String
-monotostring m
-    |fst m > 0 && fst m /= 1 = intercalate "+" [show(round (fst m)) ++ exptostring exp | exp<-snd m]
-    |fst m < 0 && fst m /= -1 = intercalate "" [show(round (fst m)) ++ exptostring exp | exp<-snd m]
-    |fst m == 1 = intercalate "+" [exptostring exp | exp<-snd m]
-    |fst m == -1 = intercalate "" ["-" ++ exptostring exp | exp<-snd m]
+monoToString :: Monomial -> String
+monoToString m
+    |fst m > 0 && fst m /= 1 && snd m /= [] = intercalate "+" [show(round (fst m)) ++ expToString exp | exp<-snd m]
+    |fst m < 0 && fst m /= -1 && snd m /= [] = intercalate "" [show(round (fst m)) ++ expToString exp | exp<-snd m]
+    |fst m == 1 && snd m /= [] = intercalate "+" [expToString exp | exp<-snd m]
+    |fst m == -1 && snd m /= [] = intercalate "" ["-" ++ expToString exp | exp<-snd m]
+    |fst m > 0 && snd m == [] = show(round (fst m))
+    |fst m < 0 && snd m == [] = show(round (fst m))
 
-printpoly :: Polynomial -> String
-printpoly p = monotostring (head p) ++ intercalate "" [if fst m > 0 then "+" ++ monotostring m else monotostring m | m<-drop 1 p]
+printPoly :: Polynomial -> String
+printPoly p = monoToString (head p) ++ intercalate "" [if fst m > 0 then "+" ++ monoToString m else monoToString m | m<-drop 1 p]
