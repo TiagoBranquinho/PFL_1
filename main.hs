@@ -91,12 +91,17 @@ multiplyPolynomials :: Polynomial -> Polynomial -> Polynomial
 multiplyPolynomials p1 p2 =  [multiplyMonomials x y | x<- p1, y<- p2]
 
 derivatePolynomial :: Polynomial -> Char -> Polynomial
-derivatePolynomial p c = [derivateMonomial m c | m<-normalizePolynomial p]
+derivatePolynomial p c = normalizePolynomial [derivateMonomial m c | m<-normalizePolynomial p]
 
 derivateMonomial :: Monomial -> Char -> Monomial
-derivateMonomial m c
-    | isPresent == True = getCharExp
-    | otherwise = 
+derivateMonomial m c = (fst m * expChar, [if fst tup /= c then tup else (fst tup, snd tup - 1) | tup<-snd m])
+        where expChar = getCharExp (snd m) c
+getCharExp :: [(Char, Double)] -> Char -> Double
+getCharExp [] c = 0
+getCharExp (x:xs) c
+    | fst x == c = snd x
+    | otherwise = getCharExp xs c     
+        
 
 normalizePolynomial :: Polynomial -> Polynomial
 normalizePolynomial p = sortBy sortGT (filter checkNull (map cleanMonomial (addPolynomials [multiplyPolynomials [(1,[])] p])))   -- ordena / tira cenas do tipo "0*x^2" / converte cenas elevadas a 0 em vazio ex: 2*x*y^0 = 2*y ou 2*y^0 = 2 TODO SORT NOT WORKING
