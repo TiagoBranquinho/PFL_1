@@ -111,3 +111,18 @@ cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])
 
 checkNull :: Monomial -> Bool
 checkNull m = fst m /= 0
+
+exptostring :: (Char, Double) -> String
+exptostring exp
+    |snd exp == 1 = [fst exp]
+    |otherwise = intercalate "^" [[fst exp], show (round(snd exp))]
+
+monotostring :: Monomial -> String
+monotostring m
+    |fst m > 0 && fst m /= 1 = intercalate "+" [show(round (fst m)) ++ exptostring exp | exp<-snd m]
+    |fst m < 0 && fst m /= -1 = intercalate "" [show(round (fst m)) ++ exptostring exp | exp<-snd m]
+    |fst m == 1 = intercalate "+" [exptostring exp | exp<-snd m]
+    |fst m == -1 = intercalate "" ["-" ++ exptostring exp | exp<-snd m]
+
+printpoly :: Polynomial -> String
+printpoly p = monotostring (head p) ++ intercalate "" [if fst m > 0 then "+" ++ monotostring m else monotostring m | m<-drop 1 p]
