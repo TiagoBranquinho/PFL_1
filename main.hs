@@ -115,10 +115,10 @@ cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])
 checkNull :: Monomial -> Bool
 checkNull m = fst m /= 0
 
-exptostring :: (Char, Double) -> String  -- Variable -> String
-exptostring exp
+expToString :: Variable -> String  -- Variable -> String
+expToString exp
     |snd exp == 1 = [fst exp]
-    |otherwise = intercalate "^" [[fst exp], show (round(snd exp))]
+    |otherwise = intercalate "^" [[fst exp], show (snd exp)]
 
 monoToString :: Monomial -> String
 monoToString m
