@@ -45,41 +45,41 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 
 ### Adicionar
 
-- Comando a utilizar: printPoly (normalizePolynomial (addPolynomials (createPoly <polinómio 1>) (createPoly <polinómio 2>)))
+- Comando a utilizar: addPolynomials <polinómio 1> <polinómio 2>
 
-- printPoly (normalizePolynomial (addPolynomials (createPoly "x + 3y + x^2 - 2"), (createPoly "3 - x + y^2 - y"))) <br>
+- addPolynomials "x + 3y + x^2 - 2" "3 - x + y^2 - y" <br>
 "aa"
 
-- printPoly (normalizePolynomial (addPolynomials (createPoly "2x^2y - 1x^2 + 5y - z") (createPoly "3x^2 + 2 - 2y"))) <br>
+- addPolynomials "2x^2y - 1x^2 + 5y - z" "3x^2 + 2 - 2y" <br>
 "aaa"
 
 ### Multiplicar
 
-- Comando a utilizar: printPoly (normalizePolynomial (multiplyPolynomials (createPoly <polinómio 1>) (createPoly <polinómio 2>)))
+- Comando a utilizar: multiplyPolynomials <polinómio 1> <polinómio 2>
 
-- printPoly (normalizePolynomial (multiplyPolynomials (createPoly "x + x^2 + 3yz") (createPoly "y + x^2z + 1"))) <br>
-"aa"
+- multiplyPolynomials "x + x^2 + 3yz" "y + x^2z + 1" <br>
+"x^4+x^3+4x^2+4y+4x^2+4z+x+y+x+z+3y^2+6y+6z+3z^2"
 
-- printPoly (normalizePolynomial (multiplyPolynomials (createPoly "x + 2y + xy + 1") (createPoly "y + x^2 + 3"))) <br>
+- multiplyPolynomials "x + 2y + xy + 1" "y + x^2 + 3" <br>
 "aaa"
 
 
 ### Derivar
 
-- Comando a utilizar: printPoly (derivatePolynomial (createPoly <polinómio>) <variável>)
+- Comando a utilizar: derivatePolynomial <polinómio> <variável>
 
-- printPoly (derivatePolynomial (createPoly "x + 3y + x^2 - 2") 'x') <br>
+- derivatePolynomial "x + 3y + x^2 - 2" 'x' <br>
 "2x + 1"
 
-- printPoly (derivatePolynomial (createPoly "2x^2y^3 - 1x^2 + 5y^2 + 2x - 3z + 1 + y + 2y") 'y') <br>
+- derivatePolynomial "2x^2y^3 - 1x^2 + 5y^2 + 2x - 3z + 1 + y + 2y" 'y' <br>
 "6x^2y^2 + 10y + 3"
 
 ### Normalizar
 
-- Comando a utilizar: printPoly (normalizePolynomial (createPoly <polinómio>))
+- Comando a utilizar: normalizePolynomial <polinómio>))
 
-- printPoly (normalizePolynomial (createPoly "2y + 4xz + 2x^2 - 8z + 1 + 2y")) <br>
+- normalizePolynomial "2y + 4xz + 2x^2 - 8z + 1 + 2y" <br>
 ""
 
-- printPoly (normalizePolynomial (createPoly "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1")) <br>
+- normalizePolynomial "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1" <br>
 ""
