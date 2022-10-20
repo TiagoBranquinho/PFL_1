@@ -45,33 +45,41 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 
 ### Adicionar
 
-- addPolynomials "x + 3y + x^2 - 2" "3 - x + y^2 - y" <br>
+- Comando a utilizar: printPoly (normalizePolynomial (addPolynomials (createPoly <polinómio 1>) (createPoly <polinómio 2>)))
+
+- printPoly (normalizePolynomial (addPolynomials (createPoly "x + 3y + x^2 - 2") (createPoly "3 - x + y^2 - y"))) <br>
 "aa"
 
-- addPolynomials "2x^2y - 1x^2 + 5y - z" "3x^2 + 2 - 2y" <br>
+- printPoly (normalizePolynomial (addPolynomials (createPoly "2x^2y - 1x^2 + 5y - z") (createPoly "3x^2 + 2 - 2y"))) <br>
 "aaa"
 
 ### Multiplicar
 
-- multiplyPolynomials "x + x^2 + 3yz" "y + x^2z + 1" <br>
+- Comando a utilizar: printPoly (normalizePolynomial (multiplyPolynomials (createPoly <polinómio 1>) (createPoly <polinómio 2>)))
+
+- printPoly (normalizePolynomial (multiplyPolynomials (createPoly "x + x^2 + 3yz") (createPoly "y + x^2z + 1"))) <br>
 "aa"
 
-- multiplyPolynomials "x + 2y + xy + 1" "y + x^2 + 3" <br>
+- printPoly (normalizePolynomial (multiplyPolynomials (createPoly "x + 2y + xy + 1") (createPoly "y + x^2 + 3"))) <br>
 "aaa"
 
 
 ### Derivar
 
-- derivatePolynomial "x + 3y + x^2 - 2" 'x' <br>
+- Comando a utilizar: printPoly (derivatePolynomial (createPoly <polinómio>) <variável>)
+
+- printPoly (derivatePolynomial (createPoly "x + 3y + x^2 - 2") 'x') <br>
 "2x + 1"
 
-- derivatePolynomial "2x^2y^3 - 1x^2 + 5y^2 + 2x - 3z + 1 + y + 2y" 'y' <br>
+- printPoly (derivatePolynomial (createPoly "2x^2y^3 - 1x^2 + 5y^2 + 2x - 3z + 1 + y + 2y") 'y') <br>
 "6x^2y^2 + 10y + 3"
 
 ### Normalizar
 
-- normalizePolynomial "2y + 4xz + 2x^2 - 8z + 1 + 2y" <br>
+- Comando a utilizar: printPoly (normalizePolynomial (createPoly <polinómio>))
+
+- printPoly (normalizePolynomial (createPoly "2y + 4xz + 2x^2 - 8z + 1 + 2y")) <br>
 ""
 
-- normalizePolynomial "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1" <br>
+- printPoly (normalizePolynomial (createPoly "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1")) <br>
 ""
