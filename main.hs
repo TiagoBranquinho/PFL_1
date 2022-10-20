@@ -6,7 +6,9 @@ import Data.Tuple
 
 import Control.Arrow ((***))
 
-type Monomial = (Double, [(Char, Double)])
+type Variable = (Char, Int)
+
+type Monomial = (Double, [Variable])
 
 type Polynomial = [Monomial]
 
@@ -62,7 +64,7 @@ subsortGT2 a b
     | otherwise = LT -}
 
 
-sortExp :: (Char,Double) -> (Char,Double) -> Ordering
+sortExp :: Variable -> Variable -> Ordering
 sortExp a b
     | fst a >= fst b = GT
     | fst a <= fst b = LT
@@ -94,9 +96,10 @@ derivatePolynomial :: Polynomial -> Char -> Polynomial
 derivatePolynomial p c = normalizePolynomial [derivateMonomial m c | m<-normalizePolynomial p]
 
 derivateMonomial :: Monomial -> Char -> Monomial
-derivateMonomial m c = (fst m * expChar, [if fst tup /= c then tup else (fst tup, snd tup - 1) | tup<-snd m])
+derivateMonomial m c = (fst m * fromIntegral expChar, [if fst tup /= c then tup else (fst tup, snd tup - 1) | tup<-snd m])
         where expChar = getCharExp (snd m) c
-getCharExp :: [(Char, Double)] -> Char -> Double
+
+getCharExp :: [Variable] -> Char -> Int
 getCharExp [] c = 0
 getCharExp (x:xs) c
     | fst x == c = snd x
@@ -112,8 +115,8 @@ cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])
 checkNull :: Monomial -> Bool
 checkNull m = fst m /= 0
 
-expToString :: (Char, Double) -> String
-expToString exp
+exptostring :: (Char, Double) -> String  -- Variable -> String
+exptostring exp
     |snd exp == 1 = [fst exp]
     |otherwise = intercalate "^" [[fst exp], show (round(snd exp))]
 
