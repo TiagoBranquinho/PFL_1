@@ -141,10 +141,11 @@ cutWhiteSpaces = filter (\c-> c /= ' ' && ord c < 123)
 
 parseCoefficient :: String -> [Double]
 parseCoefficient s
-    |null s || null (takeWhile (\c -> ord c < 96 || ord c == 45 || ord c == 43) s) = []
-    |s /= [] && head s == '+' = (read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) (drop 1 s)))
+    |s == [] = []
+    |s /= [] && head s == '+' = if (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) == [] then parseCoefficient (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) else (read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) (drop 1 s)))
     |s /= [] && head s == '-' = (-(read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s))) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) (drop 1 s)))
-    |otherwise = (read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) s) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) s))
+    |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = 1 : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) s)
+    |s /= [] && (ord (head s) < 96 && ord (head s) /= 94 && ord (head s) /= 43 && ord (head s) /= 45 ) = (read :: String -> Double) (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) s) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) s))
 
 parseVariable :: String -> [String]
 parseVariable s
@@ -166,5 +167,5 @@ zipCoefVar s = [(fst tuple, c) | tuple<-zip (parseCoefficient s) (parseVariable 
 zipCoefVarExp :: String -> [((Double, Char), Int)]
 zipCoefVarExp s =  zip (zipCoefVar s) (parseExp s)
 
-createPoly :: String -> [(Double, [(Char, Int)])]
+createPoly :: String -> Polynomial
 createPoly s =  [if snd (fst m) /= 'V' then (fst (fst m), [(snd (fst m), snd m)]) else (fst (fst m), []) | m<-zipCoefVarExp (cutWhiteSpaces s)]
