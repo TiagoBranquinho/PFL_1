@@ -47,7 +47,7 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 
 - Comando a utilizar: printPoly (normalizePolynomial (addPolynomials (createPoly <polinómio 1>) (createPoly <polinómio 2>)))
 
-- printPoly (normalizePolynomial (addPolynomials [(createPoly "x + 3y + x^2 - 2"), (createPoly "3 - x + y^2 - y")])) <br>
+- printPoly (normalizePolynomial (addPolynomials (createPoly "x + 3y + x^2 - 2"), (createPoly "3 - x + y^2 - y"))) <br>
 "aa"
 
 - printPoly (normalizePolynomial (addPolynomials (createPoly "2x^2y - 1x^2 + 5y - z") (createPoly "3x^2 + 2 - 2y"))) <br>
