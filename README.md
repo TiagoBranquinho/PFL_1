@@ -41,6 +41,14 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 - Retiramos os monómios e variáveis nulas
 - Somamos os diferentes monómios associados de forma a garantir que o resultado está simplificado.
 
+
+## Como utilizar
+
+- Tenha o ghci instalado no seu computador.   https://www.haskell.org/ghc/
+- Corra o comando "ghci" no terminal, estando no diretorio neste projeto.
+- Execute o seguinte comando: ":load main.hs"
+
+
 ## Exemplos de utilização
 
 ### Adicionar

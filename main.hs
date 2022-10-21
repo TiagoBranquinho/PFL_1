@@ -13,22 +13,22 @@ type Polynomial = [Monomial]
 
 ----------Functions for Users------
 
-addPolynomials :: String -> String -> String
+addPolynomials :: String -> String -> String         -- used by user to print result of the adition of two 'Polynomials'
 addPolynomials p1 p2 = printPolynomial (getNormalizedPolynomial (getAddPolynomials (createPolynomial p1) (createPolynomial p2)))
 
-multiplyPolynomials :: String -> String -> String
+multiplyPolynomials :: String -> String -> String          -- used by user to print result of the multiplication of two 'Polynomials'
 multiplyPolynomials p1 p2 = printPolynomial (getNormalizedPolynomial (getMultiplyPolynomials (createPolynomial p1) (createPolynomial p2)))
 
-derivatePolynomial :: String -> Char -> String
+derivatePolynomial :: String -> Char -> String             -- used by user to print result of the derivation of a 'Polynomial' in order to a character
 derivatePolynomial p1 c = printPolynomial (getNormalizedPolynomial (getDerivatePolynomial (createPolynomial p1) c))
 
-normalizePolynomial :: String -> String
+normalizePolynomial :: String -> String                     -- used by user to print result of the normalization of a 'Polynomial'
 normalizePolynomial p1 = printPolynomial (getNormalizedPolynomial (createPolynomial p1))
 
 
 ----------Sorting Functions------
 
-sortGT :: Monomial -> Monomial -> Ordering   -- Sorts a Polynomial, selecting first the ones that have a minor 'Variable' letter
+sortGT :: Monomial -> Monomial -> Ordering   -- Sorts a 'Polynomial', selecting first the ones that have a minor 'Variable' letter
 
 sortGT a b
     | null (snd a) && snd b /= [] = GT
