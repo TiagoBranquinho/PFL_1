@@ -56,20 +56,20 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 - Comando a utilizar: addPolynomials <polinómio 1> <polinómio 2>
 
 - addPolynomials "x + 3y + x^2 - 2" "3 - x + y^2 - y" <br>
-"aa"
+"x^2+y^2+2y+1"
 
 - addPolynomials "2x^2y - 1x^2 + 5y - z" "3x^2 + 2 - 2y" <br>
-"aaa"
+"2x^2y+2x^2+3y-z+2"
 
 ### Multiplicar
 
 - Comando a utilizar: multiplyPolynomials <polinómio 1> <polinómio 2>
 
 - multiplyPolynomials "x + x^2 + 3yz" "y + x^2z + 1" <br>
-"x^4+x^3+4x^2+4y+4x^2+4z+x+y+x+z+3y^2+6y+6z+3z^2"
+"x^4z+x^3z+3x^2yz^2+x^2y+x^2+xy+x+3y^2z+3yz"
 
 - multiplyPolynomials "x + 2y + xy + 1" "y + x^2 + 3" <br>
-"aaa"
+"x^3y+x^3+2x^2y+x^2+xy^2+4xy+3x+2y^2+7y+3"
 
 
 ### Derivar
@@ -87,7 +87,7 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 - Comando a utilizar: normalizePolynomial <polinómio>))
 
 - normalizePolynomial "2y + 4xz + 2x^2 - 8z + 1 + 2y" <br>
-""
+"2x^2+4xz+4y-8z+1"
 
 - normalizePolynomial "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1" <br>
-""
+"x^2+2x+3y-2y-1"
