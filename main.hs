@@ -103,12 +103,12 @@ checkNull m = fst m /= 0
 
 ----------Printing Functions----------
 
-expToString :: Variable -> String  -- Variable -> String
+expToString :: Variable -> String                     --Parses variables to String
 expToString exp
     |snd exp == 1 = [fst exp]
     |otherwise = intercalate "^" [[fst exp], show (snd exp)]
 
-monoToString :: Monomial -> String
+monoToString :: Monomial -> String                     --Parses monomials to String
 monoToString m
     |fst m > 0 && fst m /= 1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
     |fst m < 0 && fst m /= -1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
@@ -117,15 +117,15 @@ monoToString m
     |fst m > 0 && snd m == [] = show(round (fst m))
     |fst m < 0 && snd m == [] = show(round (fst m))
 
-printPoly :: Polynomial -> String
+printPoly :: Polynomial -> String                     --Prints the final polynomial
 printPoly p = monoToString (head p) ++ intercalate "" [if fst m > 0 then "+" ++ monoToString m else monoToString m | m<-drop 1 p]
 
 ----------Parsing Functions----------
 
-cutWhiteSpaces :: String -> String
+cutWhiteSpaces :: String -> String                     --Removes spaces and strange caracters from the input string
 cutWhiteSpaces = filter (\c-> c /= ' ' && ord c < 123)
 
-parseCoefficient :: String -> [Double]
+parseCoefficient :: String -> [Double]                     --Parses the coefficients from the input string
 parseCoefficient s
     |s == [] = []
     |s /= [] && head s == '+' = if (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) == [] then 1 : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s))) else (read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) (drop 1 s)))
@@ -133,31 +133,31 @@ parseCoefficient s
     |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = 1 : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) s)
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94 && ord (head s) /= 43 && ord (head s) /= 45 ) = (read :: String -> Double) (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) s) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) s))
 
-parseVariable :: String -> [String]
+parseVariable :: String -> [String]                     --Parses the variables from the input string
 parseVariable s
     |s == [] = []
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94) = if ((dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) == []) || (ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 43 || ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 45) then "V" : parseVariable (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) else filter (\c -> ord c > 96) (takeWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) : parseVariable (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)))
     |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = filter (\c-> ord c /= 94) (takeWhile (\c -> (ord c > 96 && ord c < 123) || ord c == 94) s) : parseVariable (dropWhile (\c -> ord c > 96 && ord c < 123) s)
     |s /= [] && (ord (head s) == 94) = parseVariable (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) s)
 
-listExps :: String ->[Int]
+listExps :: String ->[Int]                     --Parses expoents with the same coefficient to the same list
 listExps s
     |s == [] = []
     |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = if (drop 1 s) == [] || (ord (head (drop 1 s)) > 96 && ord (head (drop 1 s)) < 123) || ord (head (drop 1 s)) == 43 || ord (head (drop 1 s)) == 45 then 1 : listExps (drop 1 s) else listExps (drop 1 s)
     |s /= [] && (ord (head s) == 94) = read (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s)) : listExps (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s))
 
-parseExp :: String -> [[Int]]
+parseExp :: String -> [[Int]]                     --Parses expoents from the input string
 parseExp s
     |s == [] = []
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94) = if ((dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) == []) || (ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 43 || ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 45) then [0] : parseExp (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) else parseExp (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))
     |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = listExps (takeWhile (\c -> ord c /= 43 && ord c /= 45) s) : parseExp (dropWhile (\c -> ord c /= 43 && ord c /= 45) s)
     |s /= [] && (ord (head s) == 94) = read (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s)) : parseExp (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s))
 
-zipVariable :: String -> [[(Char, Int)]]
+zipVariable :: String -> [[(Char, Int)]]                     --Zips variables with corresponding expoents creating tuples of the type Variable
 zipVariable s = [zip (fst pair) (snd pair) | pair<-(zip (parseVariable s) (parseExp s))]
 
-zipMonomials :: String -> Polynomial
+zipMonomials :: String -> Polynomial                     --Zips coefficients with corresponding type Variable creating a list of Monomials which is a Polynomial 
 zipMonomials s = zip (parseCoefficient s) (zipVariable s)
 
-createPoly :: String -> Polynomial
+createPoly :: String -> Polynomial                     --Cleans Monomial's Variables that don't have variables or expoents
 createPoly s =  [if fst (head (snd m)) /= 'V' then m else (fst m, []) | m<-(zipMonomials (cutWhiteSpaces s))]
