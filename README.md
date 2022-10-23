@@ -44,8 +44,14 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 
 ## Como utilizar
 
-- Tenha o ghci instalado no seu computador.   https://www.haskell.org/ghc/
+Tenha o ghci instalado no seu computador.   https://www.haskell.org/ghc/
+
+Para conseguir compilar o projeto, terá de correr os seguintes comandos na root deste projeto:
+
+- cabal update
+- cabal install --lib QuickCheck
 - Corra o comando "ghci" no terminal, estando no diretorio neste projeto.
+- Verificar se o seguinte comando funciona: "import Tests.QuickTest"
 - Execute o seguinte comando: ":load main.hs"
 
 
@@ -91,3 +97,23 @@ Escolhemos esta representação pela versatilidade que confere ao termo "polinó
 
 - normalizePolynomial "0x^2 - 3y + 3x^0y + y + 2x + x^2 - 1" <br>
 "x^2+2x+3y-2y-1"
+
+### Combinação de operações
+
+- É possivel combinar operações
+
+- Comando a utilizar: <operação> (<operação> <polinómios>) <polinómio>), dependendo das operações escolhidas e do seu número de argumentos
+
+- multiplyPolynomials (addPolynomials "2z+1" "z+x+3") "y" <br>
+"xy+3yz+4y"
+
+- derivatePolynomial (multiplyPolynomials "2xy-4z+2x+1" "2y-xz+2") 'x' <br>
+"-4xyz-4xz+4y^2+8y+4z^2-z+4"
+
+## Testes
+
+Pode correr os seguintes comandos para testar as propriedades comutativas da adição e multiplicação de polinómios, respetivamente:
+
+- quickCheck addPolynomialsTest
+
+- quickCheck multiplyPolynomialsTest

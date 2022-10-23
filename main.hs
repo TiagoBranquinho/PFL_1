@@ -1,9 +1,9 @@
 import Data.List
 import Data.Function
 import Data.Char
+import Test.QuickCheck
 
 ----------Defining Types----------
-
 
 type Variable = (Char, Int)
 
@@ -14,17 +14,20 @@ type Polynomial = [Monomial]
 ----------Functions for Users------
 
 addPolynomials :: String -> String -> String         -- used by user to print result of the adition of two 'Polynomials'
+
 addPolynomials p1 p2 = printPoly (getNormalizedPolynomial (getAddPolynomials (createPoly p1) (createPoly p2)))
 
 multiplyPolynomials :: String -> String -> String          -- used by user to print result of the multiplication of two 'Polynomials'
+
 multiplyPolynomials p1 p2 = printPoly (getNormalizedPolynomial (getMultiplyPolynomials (createPoly p1) (createPoly p2)))
 
 derivatePolynomial :: String -> Char -> String             -- used by user to print result of the derivation of a 'Polynomial' in order to a character
+
 derivatePolynomial p1 c = printPoly (getNormalizedPolynomial (getDerivatePolynomial (createPoly p1) c))
 
 normalizePolynomial :: String -> String                     -- used by user to print result of the normalization of a 'Polynomial'
-normalizePolynomial p1 = printPoly (getNormalizedPolynomial (createPoly p1))
 
+normalizePolynomial p1 = printPoly (getNormalizedPolynomial (createPoly p1))
 
 ----------Sorting Functions------
 
@@ -54,15 +57,9 @@ sortExp a b
 
 ----------Main Functions----------
 
-{- simetricPolynomial :: Polynomial -> Polynomial
-simetricPolynomial polynomial = [(-fst monomial, snd monomial) | monomial<-polynomial] -}
-
 getAddPolynomials :: Polynomial -> Polynomial -> Polynomial         -- Returns a 'Polynomial' which is the sum of 2 'Polynomials'
 
-getAddPolynomials p1 p2 = [(sum (map fst x),  snd (head x)) | x<-groupBy ((==) `on` snd) (sortBy sortGT (p1 ++ p2))]
-
-{- subtractPolynomials :: Polynomial -> Polynomial -> Polynomial
-subtractPolynomials p1 p2 = [(sum (map fst m), snd (head m)) | m<-groupBy ((==) `on` snd) (sortBy sortGT (p1 ++ simetricPolynomial p2))] -}
+getAddPolynomials p1 p2 = [(truncate' (sum (map fst x)) 4,  snd (head x)) | x<-groupBy ((==) `on` snd) (sortBy sortGT (p1 ++ p2))]
 
 getMultiplyMonomials :: Monomial -> Monomial -> Monomial             -- Returns a 'Monomial' which is the multiplication of 2 'Monomials'
 
@@ -86,8 +83,8 @@ getCharExp :: [Variable] -> Char -> Int                          -- Returns the 
 getCharExp [] c = 0
 getCharExp (x:xs) c
     | fst x == c = snd x
-    | otherwise = getCharExp xs c     
-        
+    | otherwise = getCharExp xs c
+
 
 getNormalizedPolynomial :: Polynomial -> Polynomial                  -- Normalizes a 'Polynomial', removing null elements and 'Variables' equal to 1
 
@@ -95,20 +92,27 @@ getNormalizedPolynomial p = sortBy sortGT (filter checkNull (map cleanMonomial (
 
 cleanMonomial :: Monomial -> Monomial                     -- Removes 'Variables' equal to 1 from a 'Monomial'
 
-cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])           
+cleanMonomial p = (fst p, [x | x<-snd p, snd x /= 0])
 
 checkNull :: Monomial -> Bool                                   -- Condition to filter the list of 'Monomials', removing the ones equal to 0
 
 checkNull m = fst m /= 0
 
+truncate' :: Double -> Int -> Double                           -- get n decimal cases of double x
+
+truncate' x n = (fromIntegral (floor (x * t))) / t
+    where t = 10^n
+
 ----------Printing Functions----------
 
 expToString :: Variable -> String                     --Parses variables to String
+
 expToString exp
     |snd exp == 1 = [fst exp]
     |otherwise = intercalate "^" [[fst exp], show (snd exp)]
 
 monoToString :: Monomial -> String                     --Parses monomials to String
+
 monoToString m
     |fst m > 0 && fst m /= 1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
     |fst m < 0 && fst m /= -1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
@@ -118,14 +122,17 @@ monoToString m
     |fst m < 0 && snd m == [] = show(round (fst m))
 
 printPoly :: Polynomial -> String                     --Prints the final polynomial
+
 printPoly p = monoToString (head p) ++ intercalate "" [if fst m > 0 then "+" ++ monoToString m else monoToString m | m<-drop 1 p]
 
 ----------Parsing Functions----------
 
 cutWhiteSpaces :: String -> String                     --Removes spaces and strange caracters from the input string
+
 cutWhiteSpaces = filter (\c-> c /= ' ' && ord c < 123)
 
 parseCoefficient :: String -> [Double]                     --Parses the coefficients from the input string
+
 parseCoefficient s
     |s == [] = []
     |s /= [] && head s == '+' = if (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) == [] then 1 : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s))) else (read :: String -> Double) (takeWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (drop 1 s)) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) (drop 1 s)))
@@ -134,6 +141,7 @@ parseCoefficient s
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94 && ord (head s) /= 43 && ord (head s) /= 45 ) = (read :: String -> Double) (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) s) : parseCoefficient (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 45 && ord c /= 43) s))
 
 parseVariable :: String -> [String]                     --Parses the variables from the input string
+
 parseVariable s
     |s == [] = []
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94) = if ((dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) == []) || (ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 43 || ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 45) then "V" : parseVariable (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) else filter (\c -> ord c > 96) (takeWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) : parseVariable (dropWhile (\c -> ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)))
@@ -141,12 +149,14 @@ parseVariable s
     |s /= [] && (ord (head s) == 94) = parseVariable (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) s)
 
 listExps :: String ->[Int]                     --Parses expoents with the same coefficient to the same list
+
 listExps s
     |s == [] = []
     |s /= [] && (ord (head s) > 96 && ord (head s) < 123) = if (drop 1 s) == [] || (ord (head (drop 1 s)) > 96 && ord (head (drop 1 s)) < 123) || ord (head (drop 1 s)) == 43 || ord (head (drop 1 s)) == 45 then 1 : listExps (drop 1 s) else listExps (drop 1 s)
     |s /= [] && (ord (head s) == 94) = read (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s)) : listExps (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s))
 
 parseExp :: String -> [[Int]]                     --Parses expoents from the input string
+
 parseExp s
     |s == [] = []
     |s /= [] && (ord (head s) < 96 && ord (head s) /= 94) = if ((dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) == []) || (ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 43 || ord (head (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))) == 45) then [0] : parseExp (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s)) else parseExp (dropWhile (\c -> ord c < 96 && ord c /= 43 && ord c /= 45) (dropWhile (\c -> ord c == 43 || ord c == 45) s))
@@ -154,10 +164,23 @@ parseExp s
     |s /= [] && (ord (head s) == 94) = read (takeWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s)) : parseExp (dropWhile (\c -> ord c < 96 && (ord c /= 43 && ord c /= 45)) (drop 1 s))
 
 zipVariable :: String -> [[(Char, Int)]]                     --Zips variables with corresponding expoents creating tuples of the type Variable
+
 zipVariable s = [zip (fst pair) (snd pair) | pair<-(zip (parseVariable s) (parseExp s))]
 
 zipMonomials :: String -> Polynomial                     --Zips coefficients with corresponding type Variable creating a list of Monomials which is a Polynomial 
+
 zipMonomials s = zip (parseCoefficient s) (zipVariable s)
 
 createPoly :: String -> Polynomial                     --Cleans Monomial's Variables that don't have variables or expoents
+
 createPoly s =  [if fst (head (snd m)) /= 'V' then m else (fst m, []) | m<-(zipMonomials (cutWhiteSpaces s))]
+
+----------Test Functions----------
+
+addPolynomialsTest :: Polynomial -> Polynomial -> Bool                        -- Tests that p1 + p2 == p2 + p1
+
+addPolynomialsTest p1 p2 = getAddPolynomials p1 p2 == getAddPolynomials p2 p1
+
+multiplyPolynomialsTest :: Polynomial -> Polynomial -> Bool                   -- Tests that p1 * p2 == p2 * p1
+
+multiplyPolynomialsTest p1 p2 = getNormalizedPolynomial (getMultiplyPolynomials p1 p2) == getNormalizedPolynomial (getMultiplyPolynomials p2 p1)
