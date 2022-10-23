@@ -116,10 +116,10 @@ monoToString :: Monomial -> String                     --Parses monomials to Str
 monoToString m
     |fst m > 0 && fst m /= 1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
     |fst m < 0 && fst m /= -1 && snd m /= [] = show(round (fst m)) ++ intercalate "" [expToString exp | exp<-snd m]
+    |fst m == 0 && snd m /= [] = ""
     |fst m == 1 && snd m /= [] = intercalate "" [expToString exp | exp<-snd m]
     |fst m == -1 && snd m /= [] = "-" ++ intercalate "" [expToString exp | exp<-snd m]
-    |fst m > 0 && snd m == [] = show(round (fst m))
-    |fst m < 0 && snd m == [] = show(round (fst m))
+    |snd m == [] = show(round (fst m))
 
 printPoly :: Polynomial -> String                     --Prints the final polynomial
 
